@@ -76,4 +76,6 @@ Good luck, and have fun crafting your way to glory! We can’t wait to see the m
 
 
 
-###How to run
+###How to run####
+You can open a simple IDE, for example I used Intellij Idea, and click on the button near main
+I didn't have time to compile it usind Command line, but with javac you can get executable file, that with java run it
