@@ -14,69 +14,137 @@ public class Inventory {
 
     public void addItem(Item item)
     {
-        upgrade(item);
+        items.add(item);
+        upgrade();
     }
 
-    public void upgrade(Item item)
+    public void upgrade()
     {
-        for (Item i : items)
+        int count;
+        for (int i = 0; i < items.size(); i++)
         {
-            if (i.getName().equals(item.getName()) && (i.getRarity() == item.getRarity() || item.rarity == Rarity.Epic && i.rarity == Rarity.Epic_1) && item.rarity != Rarity.Epic_1)
+            count = 0;
+            for (int j = i + 1; j < items.size(); j++)
             {
-                switch (i.rarity)
+                if (items.get(i).getRarity() == items.get(j).getRarity() && items.get(i).getName().equals(items.get(j).getName()))
                 {
-                    case Common:
-                        if (i.upgrade_count == 2) {
-                            i.rarity = Rarity.Great;
-                            i.upgrade_count = 0;
-                            return ;
+                    count++;
+                    if (count == 3 || items.get(i).getRarity() == Rarity.Epic)
+                    {
+                        switch (items.get(i).getRarity())
+                        {
+                            case Common:
+                                toGreat();
+                                return;
+                            case Great:
+                                toRare();
+                                return ;
+                            case Rare:
+                                toEpic();
+                                return ;
+                            case Epic:
+                                toLegendary();
+                                return ;
                         }
-                        i.upgrade_count++;
-                        return ;
-                    case Great:
-                        if (i.upgrade_count == 2) {
-                            i.rarity = Rarity.Rare;
-                            i.upgrade_count = 0;
-                            return ;
-                        }
-                        i.upgrade_count++;
-                        return ;
-                    case Rare:
-                        if (i.upgrade_count == 2) {
-                            i.rarity = Rarity.Epic;
-                            i.upgrade_count = 0;
-                            return ;
-                        }
-                        i.upgrade_count++;
-                        return ;
-                    case Epic:
-                        if (i.upgrade_count == 1) {
-                            i.rarity = Rarity.Epic_1;
-                            i.upgrade_count = 0;
-                            return ;
-                        }
-                        i.upgrade_count++;
-                        return ;
-                    case Epic_1:
-                        if (i.upgrade_count == 1) {
-                            i.rarity = Rarity.Great;
-                            i.upgrade_count = 0;
-                            return ;
-                        }
-                        i.upgrade_count++;
-                        return ;
-                    case Epic_2:
-                        if (i.upgrade_count == 2) {
-                            i.rarity = Rarity.Legendary;
-                            i.upgrade_count = 0;
-                            return ;
-                        }
-                        i.upgrade_count++;
-                        return ;
+                    }
                 }
             }
         }
-        items.add(item);
+    }
+
+    void toGreat()
+    {
+        boolean checked = false;
+        int deleted = 0;
+        for (int i = 0; i < items.size(); i++)
+        {
+            if (items.get(i).getRarity() == Rarity.Common)
+            {
+                if (!checked)
+                {
+                    items.get(i).rarity = Rarity.Great;
+                    checked = true;
+                }
+                else if(deleted < 2)
+                {
+                    items.remove(i);
+                    deleted++;
+                    i--;
+                }
+            }
+        }
+    }
+
+    void toRare()
+    {
+        boolean checked = false;
+        int deleted = 0;
+        for (int i = 0; i < items.size(); i++)
+        {
+            if (items.get(i).getRarity() == Rarity.Great)
+            {
+                if (!checked)
+                {
+                    items.get(i).rarity = Rarity.Rare;
+                    checked = true;
+                }
+                else if(deleted < 2)
+                {
+                    items.remove(i);
+                    deleted++;
+                    i--;
+                }
+            }
+        }
+    }
+
+    void toEpic()
+    {
+        boolean checked = false;
+        int deleted = 0;
+        for (int i = 0; i < items.size(); i++)
+        {
+            if (items.get(i).getRarity() == Rarity.Rare)
+            {
+                if (!checked)
+                {
+                    items.get(i).rarity = Rarity.Epic;
+                    checked = true;
+                }
+                else if(deleted < 2)
+                {
+                    items.remove(i);
+                    deleted++;
+                    i--;
+                }
+            }
+        }
+    }
+
+    void toLegendary()
+    {
+        boolean checked = false;
+        int deleted = 0;
+        for (int i = 0; i < items.size(); i++)
+        {
+            if (items.get(i).getRarity() == Rarity.Epic)
+            {
+                deleted = items.get(i).upgrade_count;
+                if (items.get(i).upgrade_count == 2 && !checked)
+                {
+                    items.get(i).rarity = Rarity.Legendary;
+                    checked = true;
+                }
+                else if (items.get(i).upgrade_count < 2)
+                    items.get(i).upgrade_count++;
+                if (checked && deleted != 0)
+                {
+                    items.remove(i);
+                    i--;
+                    deleted--;
+                }
+            }
+        }
     }
 
     public void displayInventory()

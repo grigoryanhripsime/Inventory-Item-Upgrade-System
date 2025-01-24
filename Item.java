@@ -9,10 +9,10 @@ public class Item {
         upgrade_count = 0;
     }
 
-    public Item(String name, Rarity rarity, int upgrade_count) {
+    public Item(String name, Rarity rarity) {
         this.name = name;
         this.rarity = rarity;
-        this.upgrade_count = upgrade_count;
+        this.upgrade_count = 0;
     }
 
     public Item(String name) {
