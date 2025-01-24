@@ -20,10 +20,9 @@ public class Inventory {
 
     public void upgrade()
     {
-        int count;
+        int count = 0;
         for (int i = 0; i < items.size(); i++)
         {
-            count = 0;
             for (int j = i + 1; j < items.size(); j++)
             {
                 if (items.get(i).getRarity() == items.get(j).getRarity() && items.get(i).getName().equals(items.get(j).getName()))
@@ -129,15 +128,18 @@ public class Inventory {
         {
             if (items.get(i).getRarity() == Rarity.Epic)
             {
-                deleted = items.get(i).upgrade_count;
                 if (items.get(i).upgrade_count == 2 && !checked)
                 {
                     items.get(i).rarity = Rarity.Legendary;
+                    items.get(i).upgrade_count = 0;
                     checked = true;
                 }
-                else if (items.get(i).upgrade_count < 2)
+                else if (items.get(i).upgrade_count < 2 && !checked)
+                {
                     items.get(i).upgrade_count++;
-                if (checked && deleted != 0)
+                    checked = true;
+                }
+                else if (checked)
                 {
                     items.remove(i);
                     i--;
